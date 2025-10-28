@@ -1,9 +1,11 @@
 package com.codanbaru.serialization
 
 import aws.sdk.kotlin.services.dynamodb.model.AttributeValue
+import com.codanbaru.serialization.extension.subproperty
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
 
@@ -18,12 +20,34 @@ internal class DynamoMapCompositeEncoder(
 ): DynamoCompositeEncoder(property, configuration, serializersModule) {
     private var `object`: MutableMap<String, AttributeValue> = mutableMapOf()
 
+    // implementation borrowed from JsonEncoder - https://github.com/Kotlin/kotlinx.serialization/blob/master/formats/json/commonMain/src/kotlinx/serialization/json/internal/TreeJsonEncoder.kt#L234
+    private lateinit var key: String
+    private var isKey: Boolean = true
+
     override fun <T> encodeElement(descriptor: SerialDescriptor, index: Int, value: T, builder: (List<Annotation>, SerialDescriptor, String, T, (AttributeValue) -> Unit) -> Unit) {
         val elementAnnotations = annotationsAtIndex(descriptor, index)
         val elementDescriptor = descriptorAtIndex(descriptor, index)
         val elementName = propertyAtIndex(descriptor, index)
 
-        builder(elementAnnotations, elementDescriptor, elementName, value) { `object`[elementName] = it /* CHECK: Should we raise exception if encoder is already finished? */ }
+        builder(elementAnnotations, elementDescriptor, elementName, value) {
+            if (descriptor.kind is StructureKind.MAP && configuration.indexMapsByKeys) {
+                when (isKey) {
+                    true -> when (value) {
+                        is String -> {
+                            key = value
+                            isKey = false
+                        }
+                        else -> error("dynamo maps must have string keys: property=${property.subproperty(elementName)}, value=$value")
+                    }
+                    false -> {
+                        `object`[key] = it /* CHECK: Should we raise exception if encoder is already finished? */
+                        isKey = true
+                    }
+                }
+            } else {
+                `object`[elementName] = it /* CHECK: Should we raise exception if encoder is already finished? */
+            }
+        }
     }
 
     override fun encodeInlineElement(descriptor: SerialDescriptor, index: Int, builder: (List<Annotation>, SerialDescriptor, String, (AttributeValue) -> Unit) -> Encoder): Encoder {

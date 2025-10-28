@@ -17,6 +17,29 @@ object Fixtures {
     )
 
     @Serializable
+    data class ContainsList(
+        val list: List<String>
+    )
+
+    @Serializable
+    data class ContainsMap(
+        val map: Map<String, Int>
+    )
+
+    @Serializable
+    data class ContainsComplexMap(
+        val map: Map<String, Nested>
+    ) {
+        @Serializable
+        data class Nested(val a: Int)
+    }
+
+    @Serializable
+    data object SingletonObject {
+        val a: Int = 0
+    }
+
+    @Serializable
     data class Optionals(
         val a: Int,
         val b: Int = 1,

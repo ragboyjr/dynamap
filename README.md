@@ -229,3 +229,26 @@ sealed class Social {
 println(item0) // {name=S(value=Codanbaru 0), social=M(value={email=S(value=demo@codanbaru.com), type=S(value=com.codanbaru.app.Social.Email)})}
 println(item1) // {name=S(value=Codanbaru 0), social=M(value={username=S(value=@codanbaru), type=S(value=com.codanbaru.app.Social.Instagram)})}
 ```
+
+## Working with Maps
+
+You can configure map types to be serialized in a typical key/value map structure instead of the default numerically indexed structure. 
+
+Example:
+
+```kotlin
+@Serializable
+data class User(
+    val badgeCounts: Map<String, Int>
+)
+
+val user = User(badges = mapOf("badge1" to 5))
+
+Dynamap {
+    indexMapsByKeys = false 
+}.encodeToItem(user) // {badges=M(value={0=S(value=badge1), 1=N(value=5)})}
+
+Dynamap {
+    indexMapsByKeys = true
+}.encodeToItem(user) // {badges=M(value={badge1=N(value=5)})}
+```

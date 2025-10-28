@@ -3,12 +3,14 @@ package com.codanbaru.serialization
 import aws.sdk.kotlin.services.dynamodb.model.AttributeValue
 import com.codanbaru.serialization.format.decodeFromItem
 import com.codanbaru.serialization.format.encodeToItem
+import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DynamapTest {
-    val dynamap = Dynamap {
+    var dynamap = Dynamap {
         classDiscriminator = "_type"
     }
 
@@ -105,6 +107,85 @@ class DynamapTest {
     }
 
     @Test
+    fun `cannot encode or decode objects`() {
+        assertThrows<DynamapSerializationException.InvalidKind> {
+            dynamap.encodeToItem(Fixtures.SingletonObject)
+        }
+    }
+
+    @Test
+    fun `supports lists - non empty`() {
+        assertCodec(
+            Fixtures.ContainsList(listOf("a")),
+            mapOf("list" to AttributeValue.L(listOf(AttributeValue.S("a"))))
+        )
+    }
+
+    @Test
+    fun `supports lists - empty`() {
+        assertCodec(
+            Fixtures.ContainsList(emptyList()),
+            mapOf("list" to AttributeValue.L(emptyList()))
+        )
+    }
+
+    @Test
+    fun `supports maps - non empty - index by keys = false`() {
+        dynamap = Dynamap {
+            indexMapsByKeys = false
+        }
+
+        assertCodec(
+            Fixtures.ContainsMap(mapOf("a" to 1, "b" to 2, "c" to 3)),
+            mapOf("map" to AttributeValue.M(mapOf(
+                "0" to AttributeValue.S("a"),
+                "1" to AttributeValue.N("1"),
+                "2" to AttributeValue.S("b"),
+                "3" to AttributeValue.N("2"),
+                "4" to AttributeValue.S("c"),
+                "5" to AttributeValue.N("3"),
+            )))
+        )
+    }
+
+    @Test
+    fun `supports maps - non empty - index by keys = true`() {
+        dynamap = Dynamap {
+            indexMapsByKeys = true
+        }
+
+        assertCodec(
+            Fixtures.ContainsMap(mapOf("a" to 1, "b" to 2, "c" to 3)),
+            mapOf("map" to AttributeValue.M(mapOf(
+                "a" to AttributeValue.N("1"),
+                "b" to AttributeValue.N("2"),
+                "c" to AttributeValue.N("3"),
+            )))
+        )
+    }
+
+    @Test
+    fun `supports maps - empty`() {
+        assertCodec(
+            Fixtures.ContainsMap(emptyMap()),
+            mapOf("map" to AttributeValue.M(emptyMap()))
+        )
+    }
+
+    @Test
+    fun `supports maps - nested types`() {
+        dynamap = Dynamap { indexMapsByKeys = true }
+        assertCodec(
+            Fixtures.ContainsComplexMap(mapOf("a" to Fixtures.ContainsComplexMap.Nested(1))),
+            mapOf("map" to AttributeValue.M(mapOf(
+                "a" to AttributeValue.M(mapOf(
+                    "a" to AttributeValue.N("1")
+                ))
+            )))
+        )
+    }
+
+    @Test
     fun `polymorphic`() {
         assertAll(
             {
@@ -122,10 +203,11 @@ class DynamapTest {
     }
 
     inline fun <reified T>assertCodec(expectedObj: T, expectedItem: Map<String, AttributeValue>) {
+        val encodedItem = dynamap.encodeToItem(expectedObj)
         assertAll(
-            { assertEquals(expectedItem, dynamap.encodeToItem(expectedObj), "encoding to tiem") },
+            { assertEquals(expectedItem, encodedItem, "encoding to item") },
             { assertDecode(expectedObj, expectedItem) },
-            { assertEquals(expectedObj, dynamap.decodeFromItem(dynamap.encodeToItem(expectedObj))) },
+            { assertEquals(expectedObj, dynamap.decodeFromItem(encodedItem)) },
         )
     }
 
