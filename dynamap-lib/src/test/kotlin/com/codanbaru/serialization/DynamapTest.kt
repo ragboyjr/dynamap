@@ -1,7 +1,9 @@
 package com.codanbaru.serialization
 
 import aws.sdk.kotlin.services.dynamodb.model.AttributeValue
+import com.codanbaru.serialization.format.decodeFromAttribute
 import com.codanbaru.serialization.format.decodeFromItem
+import com.codanbaru.serialization.format.encodeToAttribute
 import com.codanbaru.serialization.format.encodeToItem
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.assertAll
@@ -145,6 +147,26 @@ class DynamapTest {
                 "4" to AttributeValue.S("c"),
                 "5" to AttributeValue.N("3"),
             )))
+        )
+    }
+
+    @Test
+    fun `can encode maps of enums`() {
+        dynamap = Dynamap {
+            indexMapsByKeys = true
+        }
+
+        val expectedValue = mapOf(
+            Fixtures.TestEnum.TestA to 1
+        )
+        val expectedAttribute = AttributeValue.M(mapOf(
+            "TestA" to AttributeValue.N("1")
+        ))
+
+        assertAll(
+            { assertEquals(expectedAttribute, dynamap.encodeToAttribute(expectedValue)) },
+            { assertEquals(expectedValue, dynamap.decodeFromAttribute(expectedAttribute)) },
+            { assertEquals(expectedValue, dynamap.decodeFromAttribute(dynamap.encodeToAttribute(expectedValue))) },
         )
     }
 

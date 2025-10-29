@@ -32,12 +32,12 @@ internal class DynamoMapCompositeEncoder(
         builder(elementAnnotations, elementDescriptor, elementName, value) {
             if (descriptor.kind is StructureKind.MAP && configuration.indexMapsByKeys) {
                 when (isKey) {
-                    true -> when (value) {
-                        is String -> {
-                            key = value
+                    true -> when (it) {
+                        is AttributeValue.S -> {
+                            key = it.asS()
                             isKey = false
                         }
-                        else -> error("dynamo maps must have string keys: property=${property.subproperty(elementName)}, value=$value")
+                        else -> error("dynamo maps must have string-able keys: property=${property.subproperty(elementName)}, value=$value")
                     }
                     false -> {
                         `object`[key] = it /* CHECK: Should we raise exception if encoder is already finished? */

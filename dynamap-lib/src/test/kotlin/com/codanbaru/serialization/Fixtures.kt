@@ -46,6 +46,12 @@ object Fixtures {
         val c: Int = 2
     )
 
+    enum class TestEnum {
+        TestA,
+        TestB,
+        TestC
+    }
+
     @Serializable
     data class Polymorphic(val type: Type) {
 
