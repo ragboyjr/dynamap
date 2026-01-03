@@ -10,5 +10,5 @@ enum class DynamoType {
     LIST,
     BINARY_SET,
     NUMBER_SET,
-    STRING_SET
+    STRING_SET,
 }
