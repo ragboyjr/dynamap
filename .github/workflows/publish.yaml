@@ -28,7 +28,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
         run: |
-          ./gradlew -Pversion=${{ inputs.version }} -Pmaven_central.publish_token=${{ secrets.MAVEN_CENTRAL_PUBLISH_TOKEN }} publish --no-daemon
+          ./gradlew -Pversion=${{ inputs.version }} -Pmaven_central.publish_token=${{ secrets.MAVEN_CENTRAL_PUBLISH_TOKEN }} publishToMavenCentralPortal --no-daemon
 
 #      - name: Create Git Tag
 #        run: |
