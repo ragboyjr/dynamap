@@ -1,3 +1,3 @@
 rootProject.name = "Codanbaru - DynaMap"
 
-include("dynamap-lib")
+include("dynamap-core")
