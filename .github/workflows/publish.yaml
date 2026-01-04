@@ -1,0 +1,38 @@
+name: Publish Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Publish with Gradle
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          ./gradlew -Pversion=${{ inputs.version }} -Pmaven_central.publish_token=${{ secrets.MAVEN_CENTRAL_PUBLISH_TOKEN }} publish --no-daemon
+
+#      - name: Create Git Tag
+#        run: |
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
+#          git tag -a "v${{ inputs.version }}" -m "Release version ${{ inputs.version }}"
+#          git push origin "v${{ inputs.version }}"

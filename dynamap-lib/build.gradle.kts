@@ -37,9 +37,9 @@ tasks.named<Test>("test") {
 publishing {
     publications {
         create<MavenPublication>("MavenJava") {
-            groupId = "com.codanbaru.kotlin"
-            artifactId = "dynamap"
-            version = project.findProperty("lib.version") as String? ?: "0"
+            groupId = "io.github.ragboyjr.dynamap"
+            artifactId = "dynamap-core"
+            version = project.findProperty("lib.version") as String?
 
             from(components["java"])
 
@@ -47,7 +47,7 @@ publishing {
                 name = "Dynamap"
                 description =
                     "Library to serialize and deserialize documents from DynamoDB using kotlinx.serialization."
-                url = "https://github.com/codanbaru/dynamap"
+                url = "https://github.com/ragboyjr/dynamap"
 
                 licenses {
                     license {
@@ -62,12 +62,17 @@ publishing {
                         name = "Diego Fernandez"
                         email = "diego@diegofer.com"
                     }
+                    developer {
+                        id = "ragboyjr"
+                        name = "RJ Garcia"
+                        email = "ragboyjr@icloud.com"
+                    }
                 }
 
                 scm {
-                    connection = "scm:git:git://github.com/codanbaru/dynamap.git"
-                    developerConnection = "scm:git:ssh://github.com:codanbaru/dynamap.git"
-                    url = "https://github.com/codanbaru/dynamap"
+                    connection = "scm:git:git://github.com/ragboyjr/dynamap.git"
+                    developerConnection = "scm:git:ssh://github.com:ragboyjr/dynamap.git"
+                    url = "https://github.com/ragboyjr/dynamap"
                 }
             }
         }
@@ -75,11 +80,14 @@ publishing {
 }
 
 signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["MavenJava"])
 }
 
 mavenCentral {
-    authToken = project.findProperty("sonartype.central.token") as String? ?: ""
+    authToken = project.findProperty("maven_central.publish_token") as String?
 
     publishingType = "USER_MANAGED"
 
