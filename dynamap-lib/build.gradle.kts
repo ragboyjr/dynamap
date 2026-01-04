@@ -1,12 +1,10 @@
-val serializationCoreVersion: String = "1.6.3"
-val dynamoDbVersion: String = "1.0.69"
-
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 
     id("maven-publish")
-    id("tech.yanand.maven-central-publish") version "1.3.0"
+    alias(libs.plugins.maven.central.publish)
+    alias(libs.plugins.ktlint)
 
     signing
 }
@@ -21,9 +19,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationCoreVersion")
-    implementation("aws.sdk.kotlin:dynamodb:$dynamoDbVersion")
-    testImplementation(kotlin("test-junit5"))
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.aws.dynamodb)
+    testImplementation(libs.kotlin.test.junit5)
 }
 
 tasks.named<Test>("test") {
@@ -32,7 +30,6 @@ tasks.named<Test>("test") {
         events("passed", "skipped", "failed")
     }
 }
-
 
 publishing {
     publications {
@@ -45,7 +42,8 @@ publishing {
 
             pom {
                 name = "Dynamap"
-                description = "Library to serialize and deserialize documents from DynamoDB using kotlinx.serialization."
+                description =
+                    "Library to serialize and deserialize documents from DynamoDB using kotlinx.serialization."
                 url = "https://github.com/codanbaru/dynamap"
 
                 licenses {

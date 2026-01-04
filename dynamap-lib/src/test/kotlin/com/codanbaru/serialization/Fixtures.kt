@@ -1,6 +1,5 @@
 package com.codanbaru.serialization
 
-import aws.sdk.kotlin.services.dynamodb.model.AttributeValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,20 +17,22 @@ object Fixtures {
 
     @Serializable
     data class ContainsList(
-        val list: List<String>
+        val list: List<String>,
     )
 
     @Serializable
     data class ContainsMap(
-        val map: Map<String, Int>
+        val map: Map<String, Int>,
     )
 
     @Serializable
     data class ContainsComplexMap(
-        val map: Map<String, Nested>
+        val map: Map<String, Nested>,
     ) {
         @Serializable
-        data class Nested(val a: Int)
+        data class Nested(
+            val a: Int,
+        )
     }
 
     @Serializable
@@ -43,28 +44,32 @@ object Fixtures {
     data class Optionals(
         val a: Int,
         val b: Int = 1,
-        val c: Int = 2
+        val c: Int = 2,
     )
 
     enum class TestEnum {
         TestA,
         TestB,
-        TestC
+        TestC,
     }
 
     @Serializable
-    data class Polymorphic(val type: Type) {
-
+    data class Polymorphic(
+        val type: Type,
+    ) {
         @Serializable
         sealed interface Type {
             @Serializable
             @SerialName("a")
-            data class A(val a: Int): Type
+            data class A(
+                val a: Int,
+            ) : Type
 
             @Serializable
             @SerialName("b")
-            data class B(val b: Int): Type
+            data class B(
+                val b: Int,
+            ) : Type
         }
-
     }
 }

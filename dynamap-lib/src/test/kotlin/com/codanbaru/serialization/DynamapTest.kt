@@ -5,7 +5,6 @@ import com.codanbaru.serialization.format.decodeFromAttribute
 import com.codanbaru.serialization.format.decodeFromItem
 import com.codanbaru.serialization.format.encodeToAttribute
 import com.codanbaru.serialization.format.encodeToItem
-import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
@@ -36,7 +35,7 @@ class DynamapTest {
                 "long" to AttributeValue.N("2"),
                 "float" to AttributeValue.N("3.0"),
                 "double" to AttributeValue.N("4.0"),
-            )
+            ),
         )
     }
 
@@ -46,13 +45,13 @@ class DynamapTest {
             Fixtures.Optionals(
                 a = 1,
                 b = 2,
-                c = 3
+                c = 3,
             ),
             mapOf(
                 "a" to AttributeValue.N("1"),
                 "b" to AttributeValue.N("2"),
                 "c" to AttributeValue.N("3"),
-            )
+            ),
         )
     }
 
@@ -62,13 +61,13 @@ class DynamapTest {
             {
                 assertCodec(
                     Fixtures.Optionals(
-                        a = 0
+                        a = 0,
                     ),
                     mapOf(
                         "a" to AttributeValue.N("0"),
                         "b" to AttributeValue.N("1"),
                         "c" to AttributeValue.N("2"),
-                    )
+                    ),
                 )
             },
             {
@@ -76,7 +75,7 @@ class DynamapTest {
                     Fixtures.Optionals(a = 0),
                     mapOf("a" to AttributeValue.N("0")),
                 )
-            }
+            },
         )
     }
 
@@ -93,7 +92,7 @@ class DynamapTest {
                         "a" to AttributeValue.N("0"),
                         "b" to AttributeValue.N("1"),
                         "c" to AttributeValue.N("3"),
-                    )
+                    ),
                 )
             },
             {
@@ -101,10 +100,10 @@ class DynamapTest {
                     Fixtures.Optionals(a = 0, c = 3),
                     mapOf(
                         "a" to AttributeValue.N("0"),
-                        "c" to AttributeValue.N("3")
+                        "c" to AttributeValue.N("3"),
                     ),
                 )
-            }
+            },
         )
     }
 
@@ -119,7 +118,7 @@ class DynamapTest {
     fun `supports lists - non empty`() {
         assertCodec(
             Fixtures.ContainsList(listOf("a")),
-            mapOf("list" to AttributeValue.L(listOf(AttributeValue.S("a"))))
+            mapOf("list" to AttributeValue.L(listOf(AttributeValue.S("a")))),
         )
     }
 
@@ -127,7 +126,7 @@ class DynamapTest {
     fun `supports lists - empty`() {
         assertCodec(
             Fixtures.ContainsList(emptyList()),
-            mapOf("list" to AttributeValue.L(emptyList()))
+            mapOf("list" to AttributeValue.L(emptyList())),
         )
     }
 
@@ -139,14 +138,18 @@ class DynamapTest {
 
         assertCodec(
             Fixtures.ContainsMap(mapOf("a" to 1, "b" to 2, "c" to 3)),
-            mapOf("map" to AttributeValue.M(mapOf(
-                "0" to AttributeValue.S("a"),
-                "1" to AttributeValue.N("1"),
-                "2" to AttributeValue.S("b"),
-                "3" to AttributeValue.N("2"),
-                "4" to AttributeValue.S("c"),
-                "5" to AttributeValue.N("3"),
-            )))
+            mapOf(
+                "map" to AttributeValue.M(
+                    mapOf(
+                        "0" to AttributeValue.S("a"),
+                        "1" to AttributeValue.N("1"),
+                        "2" to AttributeValue.S("b"),
+                        "3" to AttributeValue.N("2"),
+                        "4" to AttributeValue.S("c"),
+                        "5" to AttributeValue.N("3"),
+                    ),
+                ),
+            ),
         )
     }
 
@@ -157,11 +160,13 @@ class DynamapTest {
         }
 
         val expectedValue = mapOf(
-            Fixtures.TestEnum.TestA to 1
+            Fixtures.TestEnum.TestA to 1,
         )
-        val expectedAttribute = AttributeValue.M(mapOf(
-            "TestA" to AttributeValue.N("1")
-        ))
+        val expectedAttribute = AttributeValue.M(
+            mapOf(
+                "TestA" to AttributeValue.N("1"),
+            ),
+        )
 
         assertAll(
             { assertEquals(expectedAttribute, dynamap.encodeToAttribute(expectedValue)) },
@@ -178,11 +183,15 @@ class DynamapTest {
 
         assertCodec(
             Fixtures.ContainsMap(mapOf("a" to 1, "b" to 2, "c" to 3)),
-            mapOf("map" to AttributeValue.M(mapOf(
-                "a" to AttributeValue.N("1"),
-                "b" to AttributeValue.N("2"),
-                "c" to AttributeValue.N("3"),
-            )))
+            mapOf(
+                "map" to AttributeValue.M(
+                    mapOf(
+                        "a" to AttributeValue.N("1"),
+                        "b" to AttributeValue.N("2"),
+                        "c" to AttributeValue.N("3"),
+                    ),
+                ),
+            ),
         )
     }
 
@@ -190,7 +199,7 @@ class DynamapTest {
     fun `supports maps - empty`() {
         assertCodec(
             Fixtures.ContainsMap(emptyMap()),
-            mapOf("map" to AttributeValue.M(emptyMap()))
+            mapOf("map" to AttributeValue.M(emptyMap())),
         )
     }
 
@@ -199,11 +208,17 @@ class DynamapTest {
         dynamap = Dynamap { indexMapsByKeys = true }
         assertCodec(
             Fixtures.ContainsComplexMap(mapOf("a" to Fixtures.ContainsComplexMap.Nested(1))),
-            mapOf("map" to AttributeValue.M(mapOf(
-                "a" to AttributeValue.M(mapOf(
-                    "a" to AttributeValue.N("1")
-                ))
-            )))
+            mapOf(
+                "map" to AttributeValue.M(
+                    mapOf(
+                        "a" to AttributeValue.M(
+                            mapOf(
+                                "a" to AttributeValue.N("1"),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         )
     }
 
@@ -214,17 +229,22 @@ class DynamapTest {
                 assertCodec(
                     Fixtures.Polymorphic(type = Fixtures.Polymorphic.Type.A(1)),
                     mapOf(
-                        "type" to AttributeValue.M(mapOf(
-                            "_type" to AttributeValue.S("a"),
-                            "a" to AttributeValue.N("1"),
-                        ))
-                    )
+                        "type" to AttributeValue.M(
+                            mapOf(
+                                "_type" to AttributeValue.S("a"),
+                                "a" to AttributeValue.N("1"),
+                            ),
+                        ),
+                    ),
                 )
-            }
+            },
         )
     }
 
-    inline fun <reified T>assertCodec(expectedObj: T, expectedItem: Map<String, AttributeValue>) {
+    inline fun <reified T> assertCodec(
+        expectedObj: T,
+        expectedItem: Map<String, AttributeValue>,
+    ) {
         val encodedItem = dynamap.encodeToItem(expectedObj)
         assertAll(
             { assertEquals(expectedItem, encodedItem, "encoding to item") },
@@ -233,7 +253,10 @@ class DynamapTest {
         )
     }
 
-    inline fun <reified T>assertDecode(expectedObj: T, actualItem: Map<String, AttributeValue>) {
+    inline fun <reified T> assertDecode(
+        expectedObj: T,
+        actualItem: Map<String, AttributeValue>,
+    ) {
         assertEquals(expectedObj, dynamap.decodeFromItem(actualItem), "decoding from item")
     }
 }
