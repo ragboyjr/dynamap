@@ -3,8 +3,8 @@ package com.codanbaru.serialization.reader
 import com.codanbaru.serialization.dynamodb.DynamoType
 
 public sealed class PrimitiveReaderException(
-    open val value: Any,
-    open val type: DynamoType,
+    public open val value: Any,
+    public open val type: DynamoType,
     override val message: String? = null,
     override val cause: Throwable? = null,
 ) : Throwable(message, cause) {

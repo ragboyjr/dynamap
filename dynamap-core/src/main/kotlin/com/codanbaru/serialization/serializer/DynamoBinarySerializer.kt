@@ -21,7 +21,7 @@ public object DynamoBinarySerializer : KSerializer<ByteArray> {
     override fun serialize(
         encoder: Encoder,
         value: ByteArray,
-    ) = when (encoder) {
+    ): Unit = when (encoder) {
         is DynamoEncoder -> encoder.encodeBinary(value)
         else -> throw SerializationException("DynamoBinarySerializer can be used with Dynamo serializer only!")
     }

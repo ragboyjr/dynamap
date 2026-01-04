@@ -16,7 +16,7 @@ public class DynamapBuilder internal constructor(
 
     public var indexMapsByKeys: Boolean = dynamap.configuration.indexMapsByKeys
 
-    fun build(): DynamapConfiguration = DynamapConfiguration(
+    public fun build(): DynamapConfiguration = DynamapConfiguration(
         classDiscriminator = this@DynamapBuilder.classDiscriminator,
         evaluateUndefinedAttributesAsNullAttribute = this@DynamapBuilder.evaluateUndefinedAttributesAsNullAttribute,
         booleanLiteral = this@DynamapBuilder.booleanLiteral,

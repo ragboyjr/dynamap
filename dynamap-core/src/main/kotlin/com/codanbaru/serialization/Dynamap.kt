@@ -8,7 +8,7 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 
 public abstract class Dynamap internal constructor(
-    val configuration: DynamapConfiguration,
+    public val configuration: DynamapConfiguration,
     override val serializersModule: SerializersModule,
 ) : DynamapFormat {
     public companion object Default : Dynamap(DynamapConfiguration(), EmptySerializersModule())

@@ -3,7 +3,7 @@ package com.codanbaru.serialization
 import com.codanbaru.serialization.reader.PrimitiveReaderException
 import com.codanbaru.serialization.writer.PrimitiveWriterException
 
-fun <T> handlePrimitiveException(
+internal fun <T> handlePrimitiveException(
     property: String,
     block: () -> T,
 ): T {

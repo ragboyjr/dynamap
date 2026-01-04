@@ -1,4 +1,4 @@
-package com.codanbaru.serialization
+package io.github.ragboyjr.dynamap.tests
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

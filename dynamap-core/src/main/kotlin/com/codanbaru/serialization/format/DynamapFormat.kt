@@ -5,13 +5,13 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerialFormat
 import kotlinx.serialization.SerializationStrategy
 
-interface DynamapFormat : SerialFormat {
-    fun <T> encodeToAttribute(
+public interface DynamapFormat : SerialFormat {
+    public fun <T> encodeToAttribute(
         serializer: SerializationStrategy<T>,
         value: T,
     ): AttributeValue
 
-    fun <T> decodeFromAttribute(
+    public fun <T> decodeFromAttribute(
         deserializer: DeserializationStrategy<T>,
         value: AttributeValue,
     ): T

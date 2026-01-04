@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
@@ -23,15 +21,6 @@ repositories {
 dependencies {
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.aws.dynamodb)
-    testImplementation(libs.kotlin.test.junit5)
-}
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
-    testLogging {
-        outputs.upToDateWhen { false }
-        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-    }
 }
 
 publishing {
@@ -92,4 +81,8 @@ mavenCentral {
     publishingType = "USER_MANAGED"
 
     maxWait = 120
+}
+
+kotlin {
+    explicitApi()
 }
