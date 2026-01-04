@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
@@ -27,7 +29,8 @@ dependencies {
 tasks.named<Test>("test") {
     useJUnitPlatform()
     testLogging {
-        events("passed", "skipped", "failed")
+        outputs.upToDateWhen { false }
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     }
 }
 
