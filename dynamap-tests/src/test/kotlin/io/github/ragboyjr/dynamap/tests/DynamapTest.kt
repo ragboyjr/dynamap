@@ -1,6 +1,8 @@
-package com.codanbaru.serialization
+package io.github.ragboyjr.dynamap.tests
 
 import aws.sdk.kotlin.services.dynamodb.model.AttributeValue
+import com.codanbaru.serialization.Dynamap
+import com.codanbaru.serialization.DynamapSerializationException
 import com.codanbaru.serialization.format.decodeFromAttribute
 import com.codanbaru.serialization.format.decodeFromItem
 import com.codanbaru.serialization.format.encodeToAttribute

@@ -5,7 +5,7 @@ import com.codanbaru.serialization.DynamapConfiguration
 import com.codanbaru.serialization.dynamodb.DynamoType
 
 public class DynamoPrimitiveWriter(
-    val configuration: DynamapConfiguration,
+    public val configuration: DynamapConfiguration,
 ) : PrimitiveWriter {
     override fun writeBoolean(
         value: Boolean,

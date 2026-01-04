@@ -4,8 +4,8 @@ import aws.sdk.kotlin.services.dynamodb.model.AttributeValue
 import com.codanbaru.serialization.DynamapConfiguration
 import com.codanbaru.serialization.dynamodb.DynamoType
 
-class DynamoPrimitiveReader(
-    val configuration: DynamapConfiguration,
+public class DynamoPrimitiveReader(
+    public val configuration: DynamapConfiguration,
 ) : PrimitiveReader {
     override fun readBoolean(
         value: AttributeValue,

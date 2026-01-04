@@ -299,6 +299,7 @@ internal class DynamoEncoder(
         val isNullabilitySupported = serializer.descriptor.isNullable
         if (isNullabilitySupported) {
             // Instead of `serializer.serialize` to be able to intercept this
+            @Suppress("UNCHECKED_CAST")
             return encodeSerializableValue(serializer as SerializationStrategy<T?>, value)
         }
 

@@ -1,6 +1,6 @@
 package com.codanbaru.serialization.dynamodb
 
-enum class DynamoType {
+public enum class DynamoType {
     BOOLEAN,
     BINARY,
     NUMBER,

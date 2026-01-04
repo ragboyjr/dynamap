@@ -6,7 +6,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialKind
 
 public sealed class DynamapSerializationException(
-    open val property: String,
+    public open val property: String,
     override val message: String?,
     override val cause: Throwable? = null,
 ) : SerializationException(message, cause) {
@@ -31,8 +31,8 @@ public sealed class DynamapSerializationException(
 
     public class UnexpectedType(
         override val property: String,
-        val value: Any,
-        val type: DynamoType,
+        public val value: Any,
+        public val type: DynamoType,
     ) : DynamapSerializationException(
             property = property,
             message = "[$property] Unable to read/write '$value' value as '$type' dynamo type.",
@@ -47,9 +47,9 @@ public sealed class DynamapSerializationException(
 
     public class UnsupportedType(
         override val property: String,
-        val value: Any,
-        val type: DynamoType,
-        val supportedTypes: List<DynamoType>,
+        public val value: Any,
+        public val type: DynamoType,
+        public val supportedTypes: List<DynamoType>,
     ) : DynamapSerializationException(
             property = property,
             message = supportedTypes.joinToString { "'$it'" }.let {
@@ -59,8 +59,8 @@ public sealed class DynamapSerializationException(
 
     public class EnumInvalid(
         override val property: String,
-        val value: Any,
-        val supportedValues: List<String>,
+        public val value: Any,
+        public val supportedValues: List<String>,
     ) : DynamapSerializationException(
             property = property,
             message = supportedValues.joinToString { "'$it'" }.let {
