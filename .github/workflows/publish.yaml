@@ -1,6 +1,8 @@
 name: Publish Release
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       version:
@@ -16,6 +18,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Extract version from release
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          else
+            VERSION="${{ inputs.version }}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -30,11 +42,4 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
         run: |
-          ./gradlew -Pversion=${{ inputs.version }} publishToMavenCentral --no-daemon
-
-#      - name: Create Git Tag
-#        run: |
-#          git config user.name "github-actions[bot]"
-#          git config user.email "github-actions[bot]@users.noreply.github.com"
-#          git tag -a "v${{ inputs.version }}" -m "Release version ${{ inputs.version }}"
-#          git push origin "v${{ inputs.version }}"
+          ./gradlew -Pversion=${{ steps.get_version.outputs.version }} publishToMavenCentral --no-daemon
