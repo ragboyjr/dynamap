@@ -36,4 +36,4 @@ jobs:
           cache: 'gradle'
 
       - name: Run gradle check
-        run: ./gradlew check -Pkotlin.version.override=${{ matrix.kotlin-version }} -Pkotlinx.serialization.version.override=${{ matrix.serialization-version }}
+        run: ./gradlew check --no-daemon -Pkotlin.version.override=${{ matrix.kotlin-version }} -Pkotlinx.serialization.version.override=${{ matrix.serialization-version }}
