@@ -20,14 +20,14 @@ To use the DynaMap library, you have to perform serialization and deserializatio
 ```kotlin
 plugins {
     kotlin("jvm")
-    
+
     // ADD SERIALIZATION PLUGIN
     kotlin("plugin.serialization")
 }
 
 dependencies {
     // ADD SERIALIZATION DEPENDENCY
-    implementation("com.codanbaru.kotlin:dynamap:0.9.0")
+    implementation("io.github.ragboyjr.dynamap:dynamap-core:0.10.0")
 }
 ```
 
@@ -38,11 +38,11 @@ dependencies {
 plugins {
     // ADD SERIALIZATION PLUGIN
     id 'org.jetbrains.kotlin.plugin.serialization'
-}    
+}
 
 dependencies {
     // ADD SERIALIZATION DEPENDENCY
-    implementation 'com.codanbaru.kotlin:dynamap:0.9.0'
+    implementation 'io.github.ragboyjr.dynamap:dynamap-core:0.10.0'
 }
 ```
 </details>
@@ -59,13 +59,13 @@ val dynamap = Dynamap {
 
 fun encodeBook(book: Book): Map<String, AttributeValue> {
     val item: Map<String, AttributeValue> = dynamap.encodeToItem(book)
-  
+
     return item
 }
 
 fun decodeBook(item: Map<String, AttributeValue>): Book {{
     val obj: Book = dynamap.decodeFromItem(item)
-  
+
     return obj
 }
 ```
@@ -98,7 +98,7 @@ val obj2 = Dynamap { evaluateUndefinedAttributesAsNullAttribute = false }.decode
 data class Book(
     @SerialName("BookName")
     val name: String,
-    
+
     val author: String?,
     val price: Int
 )
@@ -232,7 +232,7 @@ println(item1) // {name=S(value=Codanbaru 0), social=M(value={username=S(value=@
 
 ## Working with Maps
 
-You can configure map types to be serialized in a typical key/value map structure instead of the default numerically indexed structure. 
+You can configure map types to be serialized in a typical key/value map structure instead of the default numerically indexed structure.
 
 Example:
 
@@ -245,7 +245,7 @@ data class User(
 val user = User(badges = mapOf("badge1" to 5))
 
 Dynamap {
-    indexMapsByKeys = false 
+    indexMapsByKeys = false
 }.encodeToItem(user) // {badges=M(value={0=S(value=badge1), 1=N(value=5)})}
 
 Dynamap {
